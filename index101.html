@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ผู้ใช้งานแบบสุ่ม</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>ผู้ใช้งานแบบสุ่ม</h1>
+    <button onclick="fetchData()">โหลดข้อมูลผู้ใช้</button>
+    <ul id="user-list"></ul>
+
+    <script>
+        async function fetchData() {
+            const userList = document.getElementById('user-list');
+            userList.innerHTML = '<li>กำลังโหลดข้อมูล...</li>';
+
+            try {
+                // ใช้ axios.get() เพื่อส่งคำขอ GET
+                // axios จะพร้อมใช้งานเป็น global variable หลังจากเราแทรก script CDN
+                const response = await axios.get('https://randomuser.me/api/?results=10');
+                const users = response.data.results;
+                // ล้างรายการเก่า
+                userList.innerHTML = '';
+                // แสดงข้อมูลผู้ใช้
+                users.forEach(user => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `<strong>${user.name.first} ${user.name.last}</strong> - ${user.gender}`;
+                    userList.appendChild(listItem);
+                });
+
+            } catch (error) {
+                console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error.message);
+                userList.innerHTML = '<li>เกิดข้อผิดพลาดในการดึงข้อมูล</li>';
+            }
+        }
+    </script>
+</body>
+</html>
